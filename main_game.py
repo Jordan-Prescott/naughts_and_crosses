@@ -3,12 +3,13 @@
 import random
 import sys
 import time
+import collections, itertools
 
 #variables
 #-------------------------------------------------------------------/
 playingGrid = [
     [0,0,0,0], #This row is simply padding to make the coordinates work better
-    [0,0,0,0],
+    [0,0,1,0],
     [0,0,0,0],
     [0,0,0,0]
 ]
@@ -105,14 +106,20 @@ def checkForWinner(x, y):
 # print('|   └ ─ ┴ ─ ┴ ─ ┘ ')
 # print('Y')
 
+def playerXMove():
+    freq = collections.defaultdict(int) #This counts how many 1's and 2's are on the board. 
+    for x in itertools.chain.from_iterable(playingGrid):
+        freq[x] += 1
+    
+    if freq[1] > freq[2]:
+        return True   #if O is larger than X return True so X goes next.
+    if freq[1] == freq[2]:
+        return False  #if O is equel to X then O goes next. 
 
-#Need to look at how we will change between each Player when taking turns - I think that count the list and check the 1 and 2 in here. 
-#Then need to build the input for the player and calling the checkWinner() function.
+    return 
+        
 
-
-
-
-
+playerXMove()
 
 
 time.sleep(5)
