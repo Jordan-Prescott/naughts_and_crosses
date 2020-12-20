@@ -15,7 +15,6 @@ playingGrid = [
 ]
 
 
-
 #grid layout
 #------------------------------------------------------------------/
 def coorToText(num):
@@ -137,7 +136,7 @@ while True:
 
         if playerXMove() == True:
 
-            c_move = input('Crosses, make your move: ')
+            global c_move = input('Crosses, make your move: ')
 
             if (len(c_move) == 3):
 
@@ -145,19 +144,16 @@ while True:
                     if (playingGrid[int(c_move[0])][int(c_move[2])] == 0): #Check that box is empty.
                         playingGrid[int(c_move[0])][int(c_move[2])] = 2 #Put a cross in box.
                         printGrid()
-                        if checkForWinner(int(c_move[0]), int(c_move[2])) == False:
-                            continue
-                        else:
-                            print('Crosses you win!')
                         break
 
             print("Invalid input. Try again with proper coords")
+
 
         #Noughts plays:
 
         elif playerXMove() == False:
 
-            n_move = input('Noughts, make your move: ')
+            global n_move = input('Noughts, make your move: ')
 
             if (len(n_move) == 3):
                 
@@ -165,13 +161,15 @@ while True:
                     if (playingGrid[int(n_move[0])][int(n_move[2])] == 0): #Check that box is empty.
                         playingGrid[int(n_move[0])][int(n_move[2])] = 1 #Put a nought in box.
                         printGrid()
-                        if checkForWinner(int(n_move[0]), int(n_move[2])) == False:
-                            continue
-                        else:
-                            print('Noughts you win!')
                         break
 
             print("Invalid input. Try again with proper coords")
+
+        
+        if checkForWinner(int(c_move[0]), int(c_move[2])) or checkForWinner(int(n_move[0]), int(n_move[2])) == True:
+            print('You WIN!')
+            break    
+
 
 print('I am OUT!')
 time.sleep(5)
