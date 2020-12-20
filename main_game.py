@@ -9,7 +9,7 @@ import collections, itertools
 #-------------------------------------------------------------------/
 playingGrid = [
     [0,0,0,0], #This row is simply padding to make the coordinates work better
-    [0,0,1,0],
+    [0,0,0,0],
     [0,0,0,0],
     [0,0,0,0]
 ]
@@ -28,15 +28,17 @@ def coorToText(num):
 
 
 def printGrid():
-    print('    1   2   3   ')
-    print('  ┌ ─ ┬ ─ ┬ ─ ┐ ')
-    print('1 │ ' + coorToText(playingGrid[1][1]) + ' │ ' + coorToText(playingGrid[1][2]) + ' │ ' + coorToText(playingGrid[1][3]) + ' │')
-    print('  ├ ─ ┼ ─ ┼ ─ ┤ ')
-    print('2 │ ' + coorToText(playingGrid[2][1]) + ' │ ' + coorToText(playingGrid[2][2]) + ' │ ' + coorToText(playingGrid[2][3]) + ' │')
-    print('  ├ ─ ┼ ─ ┼ ─ ┤ ')
-    print('3 │ ' + coorToText(playingGrid[3][1]) + ' │ ' + coorToText(playingGrid[3][2]) + ' │ ' + coorToText(playingGrid[3][3]) + ' │')
-    print('  └ ─ ┴ ─ ┴ ─ ┘ ')
-
+    print('  _ _ _ _ _ _ _ _X')
+    print('|                  ')
+    print('|      1   2   3   ')
+    print('|    ┌ ─ ┬ ─ ┬ ─ ┐ ')
+    print('|  1 │ ' + coorToText(playingGrid[1][1]) + ' │ ' + coorToText(playingGrid[1][2]) + ' │ ' + coorToText(playingGrid[1][3]) + ' │')
+    print('|    ├ ─ ┼ ─ ┼ ─ ┤ ')
+    print('|  2 │ ' + coorToText(playingGrid[2][1]) + ' │ ' + coorToText(playingGrid[2][2]) + ' │ ' + coorToText(playingGrid[2][3]) + ' │')
+    print('|    ├ ─ ┼ ─ ┼ ─ ┤ ')
+    print('|  3 │ ' + coorToText(playingGrid[3][1]) + ' │ ' + coorToText(playingGrid[3][2]) + ' │ ' + coorToText(playingGrid[3][3]) + ' │')
+    print('|    └ ─ ┴ ─ ┴ ─ ┘ ')
+    print('Y                  ')
 
 
 #check winner
@@ -89,38 +91,89 @@ def checkForWinner(x, y):
 #----------------------------------------------------------------/
 #instructions
 
-# input('Hello! Welcome to Noughts and Crosses. Please decide who is Player 1 and who is Player 2 now. Hit enter when decided.')
-# print('')
-# print('Ok, here are the rules. Player 1 you are Noughts (O) and Player 2 you are Crosses (X). Noughts will go first everytime so I suggest if you play again you Rock, Paper, Scissors, for who that is.')
-# print('')
-# print('The way you mark the board is with coordinates along the X and Y axis. An example is 1 1 this will be square 1 on the board and 2 3 will be the third in the middle row like shown below.')
-# print('Its the Y axis followed by the X axis.')
-# print('  _ _ _ _ _ _ _ _ X')
-# print('|    1   2   3   ')
-# print('|   ┌ ─ ┬ ─ ┬ ─ ┐ ')
-# print('| 1 │ O │   │   │ ')
-# print('|   ├ ─ ┼ ─ ┼ ─ ┤ ')
-# print('| 2 │   │   │ X │ ')
-# print('|   ├ ─ ┼ ─ ┼ ─ ┤ ')
-# print('| 3 │   │   │   │ ')
-# print('|   └ ─ ┴ ─ ┴ ─ ┘ ')
-# print('Y')
+input('Hello! Welcome to Noughts and Crosses. Please decide who is Player 1 and who is Player 2 now. Hit enter when decided.')
+print('')
+print('Ok, here are the rules. Player 1 you are Noughts (O) and Player 2 you are Crosses (X). Noughts will go first everytime so I suggest if you play again you Rock, Paper, Scissors, for who that is.')
+print('')
+print('The way you mark the board is with coordinates along the X and Y axis. An example is 1 1 this will be square 1 on the board and 2 3 will be the third in the middle row like shown below.')
+print('Its the Y axis followed by the X axis.')
+print('  _ _ _ _ _ _ _ _ X')
+print('|                  ')
+print('|     1   2   3    ')
+print('|    ┌ ─ ┬ ─ ┬ ─ ┐ ')
+print('|  1 │ O │   │   │ ')
+print('|    ├ ─ ┼ ─ ┼ ─ ┤ ')
+print('|  2 │   │   │ X │ ')
+print('|    ├ ─ ┼ ─ ┼ ─ ┤ ')
+print('|  3 │   │   │   │ ')
+print('|    └ ─ ┴ ─ ┴ ─ ┘ ')
+print('Y                  ')
+input('Press enter when you are ready to play!')
+print('')
+print('Noughts, your up!')
+print(printGrid())
+
+
+#Checks for which player should move next
+#---------------------------------------------------/
 
 def playerXMove():
     freq = collections.defaultdict(int) #This counts how many 1's and 2's are on the board. 
     for x in itertools.chain.from_iterable(playingGrid):
         freq[x] += 1
-    
+
     if freq[1] > freq[2]:
         return True   #if O is larger than X return True so X goes next.
     if freq[1] == freq[2]:
         return False  #if O is equel to X then O goes next. 
 
-    return 
-        
 
-playerXMove()
+ 
+while True:
 
+    while True:
 
+        #Crosses plays:
+
+        if playerXMove() == True:
+
+            c_move = input('Crosses, make your move: ')
+
+            if (len(c_move) == 3):
+
+                if (1 <= int(c_move[0]) <= 3 and 1 <= int(c_move[2]) <= 3): #Check for correct input
+                    if (playingGrid[int(c_move[0])][int(c_move[2])] == 0): #Check that box is empty.
+                        playingGrid[int(c_move[0])][int(c_move[2])] = 2 #Put a cross in box.
+                        printGrid()
+                        if checkForWinner(int(c_move[0]), int(c_move[2])) == False:
+                            continue
+                        else:
+                            print('Crosses you win!')
+                        break
+
+            print("Invalid input. Try again with proper coords")
+
+        #Noughts plays:
+
+        elif playerXMove() == False:
+
+            n_move = input('Noughts, make your move: ')
+
+            if (len(n_move) == 3):
+                
+                if (1 <= int(n_move[0]) <= 3 and 1 <= int(n_move[2]) <= 3): #Check for correct input
+                    if (playingGrid[int(n_move[0])][int(n_move[2])] == 0): #Check that box is empty.
+                        playingGrid[int(n_move[0])][int(n_move[2])] = 1 #Put a nought in box.
+                        printGrid()
+                        if checkForWinner(int(n_move[0]), int(n_move[2])) == False:
+                            continue
+                        else:
+                            print('Noughts you win!')
+                        break
+
+            print("Invalid input. Try again with proper coords")
+
+print('I am OUT!')
 time.sleep(5)
 sys.exit
+ 
