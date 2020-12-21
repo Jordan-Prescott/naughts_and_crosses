@@ -5,14 +5,17 @@ import sys
 import time
 import collections, itertools
 
+
+
 #variables
 #-------------------------------------------------------------------/
 playingGrid = [
-    [0,0,0,0], #This row is simply padding to make the coordinates work better
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0]
+    [3,3,3,3], #This row is simply padding to make the coordinates work better
+    [3,0,0,0],
+    [3,0,0,0],
+    [3,0,0,0]
 ]
+
 
 
 #grid layout
@@ -24,6 +27,8 @@ def coorToText(num):
         return 'O' #add 1 to the value to make a O
     if num == 2:
         return 'X' #add 2 to the value to make a X
+    if num == 3:
+        return ' ' #returns nothing and is just padding. This allows me to count the 0 later
 
 
 def printGrid():
@@ -40,6 +45,7 @@ def printGrid():
     print('Y                  ')
 
 
+
 #check winner
 #-----------------------------------------------------------------/
 
@@ -53,6 +59,7 @@ def printGrid():
 #  11  22  33 - MD
 #  13  22  31 - SD
 
+
 #|   11  21  31   |      12  22  32   |      13  23  33   |      11  12  13   |      21  22  23   |      31  32  33   |      11  22  33   |      13  22  31  
 #|----------------|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|------------------
 #|    1   2   3   |       1   2   3   |       1   2   3   |       1   2   3   |       1   2   3   |       1   2   3   |       1   2   3   |       1   2   3  
@@ -64,14 +71,15 @@ def printGrid():
 #|3 │ X │   │   │ |   3 │   │ X │   │ |   3 │   │   │ X │ |   3 │   │   │   │ |   3 │   │   │   │ |   3 │ X │ X │ X │ |   3 │   │   │ X │ |   3 │ X │   │   │
 #|  └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘ |     └ ─ ┴ ─ ┴ ─ ┘
 
-def checkForWinner(x, y):
+
+def checkForWinner(y, x):
 
     #check if previous move caused a win on vertical line 
-    if playingGrid[1][y] == playingGrid[2][y] == playingGrid [3][y]:
+    if playingGrid[1][x] == playingGrid[2][x] == playingGrid [3][x]:
         return True
 
     #check if previous move caused a win on horizontal line 
-    if playingGrid[x][1] == playingGrid[x][2] == playingGrid [x][3]:
+    if playingGrid[y][1] == playingGrid[y][2] == playingGrid [y][3]:
         return True
 
     #check if previous move was on the main diagonal and caused a win
@@ -79,7 +87,7 @@ def checkForWinner(x, y):
         return True
 
     #check if previous move was on the secondary diagonal and caused a win
-    if x + y == 3 and playingGrid[1][3] == playingGrid[2][2] == playingGrid [3][1]:
+    if x + y == 4 and playingGrid[1][3] == playingGrid[2][2] == playingGrid [3][1]:
         return True
 
     return False 
@@ -88,7 +96,7 @@ def checkForWinner(x, y):
 
 #main game
 #----------------------------------------------------------------/
-#instructions
+#instructions and welcome message when starting game.
 
 input('Hello! Welcome to Noughts and Crosses. Please decide who is Player 1 and who is Player 2 now. Hit enter when decided.')
 print('')
@@ -113,11 +121,11 @@ print('Noughts, your up!')
 print(printGrid())
 
 
-#Checks for which player should move next
-#---------------------------------------------------/
 
+#Checks for which player should move next
+#------------------------------------------------------------------/
 def playerXMove():
-    freq = collections.defaultdict(int) #This counts how many 1's and 2's are on the board. 
+    freq = collections.defaultdict(int) #This counts how many 1's and 2's are on the board.
     for x in itertools.chain.from_iterable(playingGrid):
         freq[x] += 1
 
@@ -127,51 +135,74 @@ def playerXMove():
         return False  #if O is equel to X then O goes next. 
 
 
- 
 while True:
+
 
     while True:
 
-        #Crosses plays:
+
+        #player bool to str convertion for move and win.
+        def playerConvert():
+            if playerXMove() == False:
+                return 'Naughts'
+            else:
+                return 'Crosses'
+
+
+        #players move stored    
+        move = input(str(playerConvert()) + str(' make your move: '))
+
+
+
+        #Crosses Plays
+        #------------------------------------------------------------------/
 
         if playerXMove() == True:
 
-            global c_move = input('Crosses, make your move: ')
+            if (len(move) == 3):
 
-            if (len(c_move) == 3):
-
-                if (1 <= int(c_move[0]) <= 3 and 1 <= int(c_move[2]) <= 3): #Check for correct input
-                    if (playingGrid[int(c_move[0])][int(c_move[2])] == 0): #Check that box is empty.
-                        playingGrid[int(c_move[0])][int(c_move[2])] = 2 #Put a cross in box.
+                if (1 <= int(move[0]) <= 3 and 1 <= int(move[2]) <= 3): #Check for correct input
+                    if (playingGrid[int(move[0])][int(move[2])] == 0): #Check that box is empty.
+                        playingGrid[int(move[0])][int(move[2])] = 2 #Put a cross in box.
                         printGrid()
                         break
 
             print("Invalid input. Try again with proper coords")
 
 
-        #Noughts plays:
+        #Noughts Plays
+        #------------------------------------------------------------------/
 
         elif playerXMove() == False:
 
-            global n_move = input('Noughts, make your move: ')
-
-            if (len(n_move) == 3):
+            if (len(move) == 3):
                 
-                if (1 <= int(n_move[0]) <= 3 and 1 <= int(n_move[2]) <= 3): #Check for correct input
-                    if (playingGrid[int(n_move[0])][int(n_move[2])] == 0): #Check that box is empty.
-                        playingGrid[int(n_move[0])][int(n_move[2])] = 1 #Put a nought in box.
+                if (1 <= int(move[0]) <= 3 and 1 <= int(move[2]) <= 3): #Check for correct input
+                    if (playingGrid[int(move[0])][int(move[2])] == 0): #Check that box is empty.
+                        playingGrid[int(move[0])][int(move[2])] = 1 #Put a nought in box.
                         printGrid()
                         break
 
             print("Invalid input. Try again with proper coords")
 
-        
-        if checkForWinner(int(c_move[0]), int(c_move[2])) or checkForWinner(int(n_move[0]), int(n_move[2])) == True:
-            print('You WIN!')
-            break    
+
+    #Checks for a winner after each move is made by the players. If True game ends.        
+    if checkForWinner(int(move[0]), int(move[2])) == True:
+        print(str(playerConvert()) + ' you WIN!')
+        break    
 
 
-print('I am OUT!')
+    #This counts how many 0 are on the board. If this hits 0 there are no more spaces for players to use therefore this is a draw.
+    zeroFreq = collections.defaultdict(int)
+    for x in itertools.chain.from_iterable(playingGrid):
+        zeroFreq[x] += 1
+    if zeroFreq[0] == 0:
+        print('Draw')
+        break
+
+
+
+#When out of the while loop this waits for 5 seconds and then ends the programme.
 time.sleep(5)
 sys.exit
  
